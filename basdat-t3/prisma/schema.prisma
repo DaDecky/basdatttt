@@ -1,0 +1,248 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+// ---------- MASTER / REFERENCE TABLES ----------
+model Level {
+    id_level       Int    @id
+    nama           String
+    upah_per_bulan Int
+    lensa_minimum  Int
+
+    pengguna Pengguna[]
+
+    @@map("Level")
+}
+
+model LensType {
+    id_lens Int    @id
+    tipe    String
+
+    lens Lens[]
+
+    @@map("Lens_Type")
+}
+
+// ---------- USER-CENTRIC TABLES ----------
+model Pengguna {
+    id_pengguna       Int       @id @default(autoincrement())
+    id_level          Int
+    email             String    @unique
+    username          String    @unique
+    nomor_telepon     String?
+    tanggal_lahir     DateTime?
+    tanggal_pembuatan DateTime  @default(now())
+    password          String
+
+    level     Level       @relation(fields: [id_level], references: [id_level])
+    langganan Langganan[]
+    lokasi    Lokasi[]
+    lens      Lens[]
+    konten    Konten[]
+    anggota   Anggota[]
+
+    bertemanDg Berteman[] @relation("UserFriends")
+    temanDari  Berteman[] @relation("FriendUsers")
+
+    @@map("Pengguna")
+}
+
+model Langganan {
+    nomor_langganan     Int      @default(autoincrement())
+    id_pengguna         Int
+    tanggal_langganan   DateTime
+    tanggal_kedaluwarsa DateTime
+    status              String
+
+    pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+
+    @@id([nomor_langganan, id_pengguna])
+    @@map("Langganan")
+}
+
+model Lokasi {
+    //   id_lokasi    Int      @id @default(autoincrement())
+
+    id_pengguna Int
+    latitude    Float
+    longitude   Float
+    waktu_mulai DateTime
+    waktu_akhir DateTime?
+    status      String
+
+    pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+
+    @@id([id_pengguna, waktu_mulai])
+    @@map("Lokasi")
+}
+
+model Berteman {
+    id_pengguna   Int
+    id_teman      Int
+    runtun        Int?
+    tanggal_mulai DateTime?
+
+    user  Pengguna @relation("UserFriends", fields: [id_pengguna], references: [id_pengguna])
+    teman Pengguna @relation("FriendUsers", fields: [id_teman], references: [id_pengguna])
+
+    @@id([id_pengguna, id_teman])
+    @@map("Berteman")
+}
+
+// ---------- LENSA ----------
+model Lens {
+    id_lens       Int      @id @default(autoincrement())
+    id_lens_type  Int
+    id_pengguna   Int
+    nama          String
+    tanggal_rilis DateTime
+
+    type     LensType @relation(fields: [id_lens_type], references: [id_lens])
+    pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+
+    pap Pap[]
+
+    @@map("Lens")
+}
+
+// ---------- ROOM & MEMBERS ----------
+model RoomChat {
+    id_room      Int      @id @default(autoincrement())
+    tanggal_buat DateTime
+
+    anggota Anggota[]
+    konten  Konten[]
+
+    @@map("Room_Chat")
+}
+
+model Anggota {
+    id_room        Int
+    id_pengguna    Int
+    tanggal_gabung DateTime
+
+    room     RoomChat @relation(fields: [id_room], references: [id_room])
+    pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+
+    @@id([id_room, id_pengguna])
+    @@map("Anggota")
+}
+
+// ---------- KONTEN ----------
+enum JenisKonten {
+    PAP
+    CHAT
+}
+
+model Konten {
+    //   id_konten          Int          @id @default(autoincrement())
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    tipe              JenisKonten
+    is_simpan         Boolean     @default(false)
+    waktu_pengiriman  DateTime
+
+    pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
+    room     RoomChat @relation(fields: [id_room], references: [id_room])
+
+    pap  Pap?
+    chat Chat?
+
+    @@id([id_pengguna, id_room, urutan_pengiriman])
+    @@map("Konten")
+}
+
+// ---------- PAP / CHAT ----------
+model Pap {
+    //   id_pap      Int     @id @default(autoincrement())
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    id_konten         Int     @unique
+    id_lens           Int
+    tipe              String?
+    durasi            Int?
+
+    konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
+    lens   Lens   @relation(fields: [id_lens], references: [id_lens])
+
+    addOns AddOn[]
+
+    @@id([id_pengguna, id_room, urutan_pengiriman])
+    @@map("Pap")
+}
+
+model Chat {
+    // id_chat   Int    @id @default(autoincrement())
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    id_konten         Int    @unique
+    pesan             String
+
+    // konten Konten @relation(fields: [id_konten], references: [id_konten])
+    Konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
+
+    @@id([id_pengguna, id_room, urutan_pengiriman])
+    @@map("Chat")
+}
+
+// ---------- ADD-ON ----------
+model AddOn {
+    // id_add_on         Int @id @default(autoincrement())
+    // id_pap    Int
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    first_x           Int
+    last_x            Int
+    first_y           Int
+    last_y            Int
+    layer             Int
+
+    // pap     Pap      @relation(fields: [id_pap], references: [id_pap])
+    pap Pap @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
+
+    caption Caption?
+    overlay Overlay?
+
+    @@id([id_pengguna, id_room, urutan_pengiriman, layer])
+    @@map("Add_On")
+}
+
+model Caption {
+    // id_add_on         Int     @id
+    teks              String
+    font_style        String?
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    layer             Int
+
+    // addOn AddOn @relation(fields: [id_add_on], references: [id_add_on])
+    addOn AddOn @relation(fields: [id_pengguna, id_room, urutan_pengiriman, layer], references: [id_pengguna, id_room, urutan_pengiriman, layer])
+
+    @@id([id_pengguna, id_room, urutan_pengiriman, layer])
+    @@map("Caption")
+}
+
+model Overlay {
+    // id_add_on         Int    @id
+    nama              String
+    id_pengguna       Int
+    id_room           Int
+    urutan_pengiriman Int
+    layer             Int
+
+    // addOn AddOn @relation(fields: [id_add_on], references: [id_add_on])
+    addOn AddOn @relation(fields: [id_pengguna, id_room, urutan_pengiriman, layer], references: [id_pengguna, id_room, urutan_pengiriman, layer])
+
+    @@id([id_pengguna, id_room, urutan_pengiriman, layer])
+    @@map("Overlay")
+}

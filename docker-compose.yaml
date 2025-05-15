@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:11.3
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: fakerdb
+      MYSQL_USER: fakeruser
+      MYSQL_PASSWORD: fakerpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - dbnet
+
+volumes:
+  mariadb_data:
+
+networks:
+  dbnet:
