@@ -20,8 +20,8 @@ model Level {
 }
 
 model LensType {
-    id_lens Int    @id
-    tipe    String
+    id_lens Int    @id @default(autoincrement())
+    tipe    String  @unique
 
     lens Lens[]
 
@@ -140,7 +140,6 @@ enum JenisKonten {
 }
 
 model Konten {
-    //   id_konten          Int          @id @default(autoincrement())
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
@@ -160,17 +159,15 @@ model Konten {
 
 // ---------- PAP / CHAT ----------
 model Pap {
-    //   id_pap      Int     @id @default(autoincrement())
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
-    id_konten         Int     @unique
-    id_lens           Int
+    id_lens           Int?
     tipe              String?
     durasi            Int?
 
     konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
-    lens   Lens   @relation(fields: [id_lens], references: [id_lens])
+    lens   Lens?   @relation(fields: [id_lens], references: [id_lens])
 
     addOns AddOn[]
 
@@ -179,14 +176,11 @@ model Pap {
 }
 
 model Chat {
-    // id_chat   Int    @id @default(autoincrement())
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
-    id_konten         Int    @unique
-    pesan             String
+    pesan             String @db.Text
 
-    // konten Konten @relation(fields: [id_konten], references: [id_konten])
     Konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
 
     @@id([id_pengguna, id_room, urutan_pengiriman])
@@ -195,18 +189,15 @@ model Chat {
 
 // ---------- ADD-ON ----------
 model AddOn {
-    // id_add_on         Int @id @default(autoincrement())
-    // id_pap    Int
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
-    first_x           Int
-    last_x            Int
-    first_y           Int
-    last_y            Int
+    first_x           Float
+    last_x            Float
+    first_y           Float
+    last_y            Float
     layer             Int
 
-    // pap     Pap      @relation(fields: [id_pap], references: [id_pap])
     pap Pap @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
 
     caption Caption?
