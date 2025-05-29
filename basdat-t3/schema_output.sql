@@ -101,7 +101,7 @@ CREATE TABLE `Konten` (
     `urutan_pengiriman` INTEGER NOT NULL,
     `tipe_konten` ENUM('PAP', 'CHAT') NOT NULL,
     `is_simpan` BOOLEAN NOT NULL DEFAULT false,
-    `waktu_pengiriman` DATETIME(3) NOT NULL,
+    `waktu_pengiriman` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id_pengguna`, `id_room`, `urutan_pengiriman`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -71,7 +71,7 @@ model Lokasi {
     id_pengguna Int
     latitude    Float
     longitude   Float
-    waktu_mulai DateTime @default(now())
+    waktu_mulai DateTime  @default(now())
     waktu_akhir DateTime?
     status      String
 
@@ -84,7 +84,7 @@ model Lokasi {
 model Berteman {
     id_pengguna   Int
     id_teman      Int
-    runtutan      Int @default(0)
+    runtutan      Int      @default(0)
     tanggal_mulai DateTime
 
     user  Pengguna @relation("UserFriends", fields: [id_pengguna], references: [id_pengguna])
@@ -122,9 +122,9 @@ model RoomChat {
 }
 
 model Anggota {
-    id_room        Int 
+    id_room        Int
     id_pengguna    Int
-    tanggal_gabung DateTime  
+    tanggal_gabung DateTime
 
     room     RoomChat @relation(fields: [id_room], references: [id_room])
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
@@ -150,7 +150,7 @@ model Konten {
     urutan_pengiriman Int
     tipe_konten       JenisKonten
     is_simpan         Boolean     @default(false)
-    waktu_pengiriman  DateTime
+    waktu_pengiriman  DateTime    @default(now())
 
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
     room     RoomChat @relation(fields: [id_room], references: [id_room])
