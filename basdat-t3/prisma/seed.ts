@@ -209,7 +209,7 @@ async function main() {
             data: {
               id_pengguna: userA_id,
               id_teman: userB_id,
-              runtun: faker.helpers.maybe(
+              runtutan: faker.helpers.maybe(
                 () => faker.number.int({ min: 1, max: 200 }),
                 { probability: 0.6 },
               ),

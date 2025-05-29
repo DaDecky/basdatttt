@@ -84,7 +84,7 @@ model Lokasi {
 model Berteman {
     id_pengguna   Int
     id_teman      Int
-    runtun        Int?
+    runtutan      Int?
     tanggal_mulai DateTime?
 
     user  Pengguna @relation("UserFriends", fields: [id_pengguna], references: [id_pengguna])
