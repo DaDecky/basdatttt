@@ -144,6 +144,11 @@ enum TipeAddOn {
     OVERLAY
 }
 
+enum TipePap {
+    FOTO
+    VIDEO
+}
+
 model Konten {
     id_pengguna       Int
     id_room           Int
@@ -169,6 +174,8 @@ model Pap {
     urutan_pengiriman Int
     id_lens           Int?
     durasi            Int?
+    tipe_pap          TipePap
+    file_path         String  @db.Text
 
     konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
     lens   Lens?  @relation(fields: [id_lens], references: [id_lens])

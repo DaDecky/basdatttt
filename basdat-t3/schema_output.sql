@@ -113,6 +113,8 @@ CREATE TABLE `Pap` (
     `urutan_pengiriman` INTEGER NOT NULL,
     `id_lens` INTEGER NULL,
     `durasi` INTEGER NULL,
+    `tipe_pap` ENUM('FOTO', 'VIDEO') NOT NULL,
+    `file_path` TEXT NOT NULL,
 
     PRIMARY KEY (`id_pengguna`, `id_room`, `urutan_pengiriman`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
