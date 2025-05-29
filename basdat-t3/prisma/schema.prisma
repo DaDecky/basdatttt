@@ -21,7 +21,7 @@ model Level {
 
 model LensType {
     id_lens Int    @id @default(autoincrement())
-    tipe    String  @unique
+    tipe    String @unique
 
     lens Lens[]
 
@@ -53,7 +53,7 @@ model Pengguna {
 }
 
 model Langganan {
-    nomor_langganan     Int      
+    nomor_langganan     Int
     id_pengguna         Int
     tanggal_langganan   DateTime
     tanggal_kedaluwarsa DateTime
@@ -71,7 +71,7 @@ model Lokasi {
     id_pengguna Int
     latitude    Float
     longitude   Float
-    waktu_mulai DateTime
+    waktu_mulai DateTime @default(now())
     waktu_akhir DateTime?
     status      String
 
@@ -84,8 +84,8 @@ model Lokasi {
 model Berteman {
     id_pengguna   Int
     id_teman      Int
-    runtutan      Int?
-    tanggal_mulai DateTime?
+    runtutan      Int @default(0)
+    tanggal_mulai DateTime
 
     user  Pengguna @relation("UserFriends", fields: [id_pengguna], references: [id_pengguna])
     teman Pengguna @relation("FriendUsers", fields: [id_teman], references: [id_pengguna])
@@ -122,9 +122,9 @@ model RoomChat {
 }
 
 model Anggota {
-    id_room        Int
+    id_room        Int 
     id_pengguna    Int
-    tanggal_gabung DateTime
+    tanggal_gabung DateTime  
 
     room     RoomChat @relation(fields: [id_room], references: [id_room])
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
@@ -140,15 +140,15 @@ enum JenisKonten {
 }
 
 enum TipeAddOn {
-  CAPTION
-  OVERLAY
+    CAPTION
+    OVERLAY
 }
 
 model Konten {
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
-    tipe_konten              JenisKonten
+    tipe_konten       JenisKonten
     is_simpan         Boolean     @default(false)
     waktu_pengiriman  DateTime
 
@@ -171,7 +171,7 @@ model Pap {
     durasi            Int?
 
     konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
-    lens   Lens?   @relation(fields: [id_lens], references: [id_lens])
+    lens   Lens?  @relation(fields: [id_lens], references: [id_lens])
 
     addOns AddOn[]
 
@@ -202,7 +202,7 @@ model AddOn {
     last_y            Float
     layer             Int
 
-    tipe_add_on              TipeAddOn
+    tipe_add_on TipeAddOn
 
     pap Pap @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
 

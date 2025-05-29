@@ -49,7 +49,7 @@ CREATE TABLE `Lokasi` (
     `id_pengguna` INTEGER NOT NULL,
     `latitude` DOUBLE NOT NULL,
     `longitude` DOUBLE NOT NULL,
-    `waktu_mulai` DATETIME(3) NOT NULL,
+    `waktu_mulai` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `waktu_akhir` DATETIME(3) NULL,
     `status` VARCHAR(191) NOT NULL,
 
@@ -60,8 +60,8 @@ CREATE TABLE `Lokasi` (
 CREATE TABLE `Berteman` (
     `id_pengguna` INTEGER NOT NULL,
     `id_teman` INTEGER NOT NULL,
-    `runtutan` INTEGER NULL,
-    `tanggal_mulai` DATETIME(3) NULL,
+    `runtutan` INTEGER NOT NULL DEFAULT 0,
+    `tanggal_mulai` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id_pengguna`, `id_teman`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
