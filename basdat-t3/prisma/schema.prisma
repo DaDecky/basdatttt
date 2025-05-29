@@ -139,6 +139,11 @@ enum JenisKonten {
     CHAT
 }
 
+enum TipeAddOn {
+  CAPTION
+  OVERLAY
+}
+
 model Konten {
     id_pengguna       Int
     id_room           Int
@@ -197,6 +202,8 @@ model AddOn {
     first_y           Float
     last_y            Float
     layer             Int
+
+    tipe              TipeAddOn
 
     pap Pap @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
 
