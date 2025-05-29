@@ -148,7 +148,7 @@ model Konten {
     id_pengguna       Int
     id_room           Int
     urutan_pengiriman Int
-    tipe              JenisKonten
+    tipe_konten              JenisKonten
     is_simpan         Boolean     @default(false)
     waktu_pengiriman  DateTime
 
@@ -202,7 +202,7 @@ model AddOn {
     last_y            Float
     layer             Int
 
-    tipe              TipeAddOn
+    tipe_add_on              TipeAddOn
 
     pap Pap @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
 
