@@ -168,7 +168,6 @@ model Pap {
     id_room           Int
     urutan_pengiriman Int
     id_lens           Int?
-    tipe              String?
     durasi            Int?
 
     konten Konten @relation(fields: [id_pengguna, id_room, urutan_pengiriman], references: [id_pengguna, id_room, urutan_pengiriman])
