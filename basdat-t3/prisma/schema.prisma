@@ -53,7 +53,7 @@ model Pengguna {
 }
 
 model Langganan {
-    nomor_langganan     Int      @default(autoincrement())
+    nomor_langganan     Int      
     id_pengguna         Int
     tanggal_langganan   DateTime
     tanggal_kedaluwarsa DateTime
