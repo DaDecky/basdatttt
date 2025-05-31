@@ -166,7 +166,7 @@ model Konten {
     id_room           Int
     urutan_pengiriman Int
     tipe_konten       JenisKonten
-    is_simpan         Boolean     @default(false)
+    is_simpan         Boolean     @default(true)
     waktu_pengiriman  DateTime    @default(now())
 
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
