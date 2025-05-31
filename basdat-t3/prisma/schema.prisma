@@ -49,6 +49,7 @@ model Pengguna {
     bertemanDg Berteman[] @relation("UserFriends")
     temanDari  Berteman[] @relation("FriendUsers")
 
+
     @@map("Pengguna")
 }
 
@@ -57,7 +58,7 @@ model Langganan {
     id_pengguna         Int
     tanggal_langganan   DateTime
     tanggal_kedaluwarsa DateTime
-    status              String
+    status              StatusLangganan
 
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
 
@@ -73,7 +74,7 @@ model Lokasi {
     longitude   Float
     waktu_mulai DateTime  @default(now())
     waktu_akhir DateTime?
-    status      String
+    status      StatusLokasi
 
     pengguna Pengguna @relation(fields: [id_pengguna], references: [id_pengguna])
 
@@ -93,6 +94,7 @@ model Berteman {
     @@id([id_pengguna, id_teman])
     @@map("Berteman")
 }
+
 
 // ---------- LENSA ----------
 model Lens {
@@ -147,6 +149,16 @@ enum TipeAddOn {
 enum TipePap {
     FOTO
     VIDEO
+}
+
+enum StatusLangganan {
+    AKTIF
+    TIDAK_AKTIF
+}
+
+enum StatusLokasi {
+    PRIVATE
+    PUBLIC
 }
 
 model Konten {
